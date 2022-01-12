@@ -1,8 +1,12 @@
 import React from "react"
 
-const Filter = ({value, onChange}) =>
-    <div>
-        filter shown with <input value={value} onChange={onChange} />
-    </div>
+const Filter = ({searchTerm, handleSearch}) => { 
+    return (
+        <div>
+                filter shown with <input type ="text" value={searchTerm} onChange={handleSearch} />
+        </div>
+    )
+}
+    
 
 export default Filter
