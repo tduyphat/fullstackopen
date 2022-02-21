@@ -7,6 +7,7 @@ test('dummy returns one', () => {
   expect(result).toBe(1)
 })
 
+
 describe('total likes', () => {
     const listWithOneBlog = [
       {
@@ -23,25 +24,26 @@ describe('total likes', () => {
       const result = listHelper.totalLikes(listWithOneBlog)
       expect(result).toBe(5)
     })
-  })
+})
+
 
 describe('favorite blogs', () => {
     const blogs = [
         {
             title: "Go To Statement Considered Harmful",
             author: "Edsger W. Dijkstra",
-            likes: 5,
-          },
-          {
+            likes: 5
+        },
+        {
             title: "React patterns",
             author: "Michael Chan",
-            likes: 7,
-          },
-          {
+            likes: 7
+        },
+        {
             title: "Canonical string reduction",
             author: "Edsger W. Dijkstra",
             likes: 12
-          } 
+        } 
     ]
     test('return the blog with most likes', () => {
         const result = listHelper.favoriteBlog(blogs)
@@ -52,4 +54,68 @@ describe('favorite blogs', () => {
         })
     })
 })
+
+
+describe('most blogs', () => {
+    const blogs = [
+        {
+            title: "Go To Statement Considered Harmful",
+            author: "Edsger W. Dijkstra",
+            likes: 5
+        },
+        {
+            title: "First class tests",
+            author: "Robert C. Martin",
+            likes: 10
+        },
+        {
+            title: "Type wars",
+            author: "Robert C. Martin",
+            likes: 0
+        },
+        {
+            title: "TDD harms architecture",
+            author: "Robert C. Martin",
+            likes: 2
+        }
+    ]
+    test('return the author with most blogs', () => {
+      const result = listHelper.mostBlogs(blogs)
+      expect(result).toEqual({
+        author: "Robert C. Martin",
+        blogs: 3,
+      })
+    })
+})
+
+
+describe('most likes', () => {
+    const blogs = [
+        {
+            title: "Go To Statement Considered Harmful",
+            author: "Edsger W. Dijkstra",
+            likes: 5
+        },
+        {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            likes: 12
+        },
+        {
+            title: "TDD harms architecture",
+            author: "Robert C. Martin",
+            likes: 2
+        }
+    ]
+    test('return the author with most likes', () => {
+      const result = listHelper.mostLikes(blogs)
+      expect(result).toEqual({
+        author: "Edsger W. Dijkstra",
+        likes: 17
+      })
+    })
+})
+
+
+  
 
