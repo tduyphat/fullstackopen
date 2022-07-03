@@ -5,21 +5,6 @@ const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
 
-// const initialBlogs = [
-//   {
-//     title: 'F Araska',
-//     author:'johnny',
-//     url:'www.farasaka.com',
-//     likes:77
-//   },
-//   {
-//     title: 'F oraska',
-//     author:'joe',
-//     url:'www.forasaka.com',
-//     likes:76
-//   }
-// ]
-
 beforeEach(async () => {
   await Blog.deleteMany({})
 
@@ -31,6 +16,7 @@ beforeEach(async () => {
 afterAll(() => {
   mongoose.connection.close()
 })
+
 
 test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
@@ -103,6 +89,25 @@ test('a blog can be deleted', async () => {
   expect(titles).not.toContain(blogToDelete.title)
 })
 
+test('Update the information of an individual blog post', async () => {
+  const blogs = await helper.blogsInDb()
+  const blogToBeUpdated = blogs[0]
+  const update = {
+    likes: 20,
+  };
+
+  await api
+    .put(`/api/blogs/${blogToBeUpdated.id}`)
+    .send(update)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const updatedBlog = await api
+    .get(`/api/blogs/${blogToBeUpdated.id}`)
+
+  expect(updatedBlog.body).toEqual(expect.objectContaining(update))
+})
+
 test('verify id property is unique and defined', async () => {
   const response = await api
     .get('/api/blogs')
@@ -118,8 +123,6 @@ test('verify id property is unique and defined', async () => {
   })
   expect(confirmIfArrayUnique(ids)).toBeTruthy()
 })
-
-//checkpoint
 
 test('if the likes property is missing from the request, it will default to the value 0', async () => {
   const newBlog = {
@@ -137,5 +140,21 @@ test('if the likes property is missing from the request, it will default to the 
   const response = await api
     .get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
+    console.log(response.body[helper.initialBlogs.length])
     expect(response.body[helper.initialBlogs.length].likes).toBe(0)
+})
+
+test('if title and url are missing from the request, return 400 Bad request', async () => {
+  const newBlog = {
+    author: 'hoho',
+    likes: 40,
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const blogsResult = await helper.blogsInDb()
+  expect(blogsResult).toHaveLength(helper.initialBlogs.length)
 })

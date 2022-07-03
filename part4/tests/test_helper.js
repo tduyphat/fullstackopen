@@ -5,14 +5,14 @@ const initialBlogs = [
         title: 'F Araska',
         author:'johnny',
         url:'www.farasaka.com',
-        likes:77
+        likes: 77,
       },
-      {
-        title: 'F oraska',
-        author:'joe',
-        url:'www.forasaka.com',
-        likes:76
-      }
+      // {
+      //   title: 'F oraska',
+      //   author:'joe',
+      //   url:'www.forasaka.com',
+      //   likes: 76,
+      // },
 ]
 
 const nonExistingId = async () => {
