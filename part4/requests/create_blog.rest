@@ -2,9 +2,9 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-"title": "yo yo" ,
-"author": "yoo",
-"url": "www.yoh.com",
-"likes": "233",
-"userId": "62e7f6f13f10deafd6583eaa"
+"title": "ayo mr white" ,
+"author": "wrizz",
+"url": "www.wassupbiatch.com",
+"likes": "42069",
+"userId": "63d1fab8ce6d379c793b922d"
 }
