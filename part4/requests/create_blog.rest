@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRkdXlwaGF0IiwiaWQiOiI2M2QxZmFiOGNlNmQzNzljNzkzYjkyMmQiLCJpYXQiOjE2NzQ4NjgwMjR9.x2bt3_TdyfQnGN_eqQ3CVRWWIV1eBaVyDzBdL4bn6RA
 
 {
-"title": "ayo mr white" ,
-"author": "wrizz",
-"url": "www.wassupbiatch.com",
-"likes": "42069",
+"title": "webdev" ,
+"author": "colt",
+"url": "www.webdev.com",
+"likes": "1234",
 "userId": "63d1fab8ce6d379c793b922d"
 }
