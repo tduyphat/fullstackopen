@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
@@ -7,12 +8,6 @@ const initialBlogs = [
     url: 'www.farasaka.com',
     likes: 77,
   },
-  // {
-  //   title: 'F oraska',
-  //   author:'joe',
-  //   url:'www.forasaka.com',
-  //   likes: 76,
-  // },
 ]
 
 const nonExistingId = async () => {

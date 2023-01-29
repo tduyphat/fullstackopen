@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+// const uniqueValidator = require('mongoose-unique-validator')
 
 const blogSchema = new mongoose.Schema({
   title: {
@@ -24,12 +25,14 @@ const blogSchema = new mongoose.Schema({
   }
 })
 
+// blogSchema.plugin(uniqueValidator)
+
 blogSchema.set('toJSON', {
-    transform: (blog, returnedBlog) => {
-      returnedBlog.id = returnedBlog._id.toString()
-      delete returnedBlog._id
-      delete returnedBlog.__v
-    }
-  })
+  transform: (blog, returnedBlog) => {
+    returnedBlog.id = returnedBlog._id.toString()
+    delete returnedBlog._id
+    delete returnedBlog.__v
+  }
+})
 
 module.exports = mongoose.model('Blog', blogSchema)
