@@ -28,6 +28,7 @@ const App = () => {
         .getAll()
         .then(initialBlogs => {
           setBlogs(initialBlogs)
+          console.log(blogs)
         })
   }, [user])
 
@@ -60,6 +61,7 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
+      console.log(user)
       setUsername('')
       setPassword('')
 

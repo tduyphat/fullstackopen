@@ -39,6 +39,7 @@ const BlogForm = ({ createBlog }) => {
             id='title'
             value={title}
             onChange={handleTitleChange}
+            placeholder='A walk in the park'
           />
         </div>
         <div>
@@ -47,6 +48,7 @@ const BlogForm = ({ createBlog }) => {
             id='author'
             value={author}
             onChange={handleAuthorChange}
+            placeholder='John Doe'
           />
         </div>
         <div>
@@ -55,6 +57,7 @@ const BlogForm = ({ createBlog }) => {
             id='url'
             value={url}
             onChange={handleUrlChange}
+            placeholder='www.awalkinthepark.com'
           />
         </div>
         <button type='submit'>create</button>

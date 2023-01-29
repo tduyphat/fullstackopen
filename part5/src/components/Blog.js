@@ -41,8 +41,12 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
 
   return (
     <div style={blogStyle} className='blog'>
+      
       {blog.title} {blog.author}
-      <button onClick={handleDisplay}>{buttonLabel}</button>
+      <button onClick={handleDisplay}>
+        {buttonLabel}
+      </button>
+      
       <div style={displayStyle} className='blog-info'>
         <p>url: {blog.url}</p>
         <p>
