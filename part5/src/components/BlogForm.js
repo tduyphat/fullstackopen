@@ -60,7 +60,7 @@ const BlogForm = ({ createBlog }) => {
             placeholder='www.awalkinthepark.com'
           />
         </div>
-        <button type='submit'>create</button>
+        <button id='create-button' type='submit'>create</button>
       </form>
     </div>
   )

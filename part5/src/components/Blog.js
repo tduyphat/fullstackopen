@@ -38,15 +38,12 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
       remove(blog.id)
   }
-
   return (
     <div style={blogStyle} className='blog'>
-      
       {blog.title} {blog.author}
       <button onClick={handleDisplay}>
         {buttonLabel}
       </button>
-      
       <div style={displayStyle} className='blog-info'>
         <p>url: {blog.url}</p>
         <p>
