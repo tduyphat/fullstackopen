@@ -19,45 +19,37 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const addAnecdote = (content) => {
-  return {
-    type: 'ADD_ANECDOTE',
-    content,
-    id: getId()
-  }
-}
-
-const voteForAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    id
-  }
-}
-
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'VOTE':
-      const id = action.id
-      const anecdoteToChange = state.find(n => n.id === id)
-      const changedAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1
-      }
-      return state
-        .map(anecdote =>
-          anecdote.id !== id ? anecdote : changedAnecdote
-        )
-        .sort((a, b) => b.votes - a.votes)
-    case 'ADD_ANECDOTE':
-      return state.concat({
-        content: action.content,
-        id: action.id,
-        votes: 0
-      })
+const anecdoteReducer = (state = initialState, action) => {
+  switch(action.type) {
+    case 'LIKE':
+      let votedAnecdote = state.find(anecdote => anecdote.id === action.data.id)
+      votedAnecdote = {...votedAnecdote, votes: votedAnecdote.votes+1}
+      return state.map(anecdote => anecdote.id !== votedAnecdote.id ? anecdote: votedAnecdote)
+    case 'CREATE':
+      return [...state, action.data]
     default:
       return state
   }
 }
 
-export { addAnecdote, voteForAnecdote }
-export default reducer
+export const voteAnecdote = (id) => {
+  return {
+    type: 'LIKE',
+    data: {
+      id: id
+    }
+  }
+}
+
+export const createAnecdote = (anec) => {
+  return {
+    type: 'CREATE',
+    data: {
+      content: anec,
+      votes: 0,
+      id: getId()
+    }
+  }
+}
+
+export default anecdoteReducer
