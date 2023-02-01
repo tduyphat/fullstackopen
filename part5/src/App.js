@@ -28,7 +28,6 @@ const App = () => {
         .getAll()
         .then(initialBlogs => {
           setBlogs(initialBlogs)
-          console.log(blogs)
         })
   }, [user])
 
@@ -122,7 +121,7 @@ const App = () => {
         <div>
           <p>{user.name} logged-in
             <span>
-              <button onClick={handleLogout}>
+              <button id='logout-button' onClick={handleLogout}>
                 logout
               </button>
             </span>
@@ -136,6 +135,7 @@ const App = () => {
               .map((blog) =>
                 <Blog
                   key={blog.id}
+                  className='blog'
                   blog={blog}
                   user={user}
                   updateLikes={handleLikes}

@@ -52,10 +52,12 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
             like
           </button>
         </p>
-        <p>{user.name}</p>
-        <button id='delete' onClick={handleDelete}>
-          remove
-        </button>
+        {blog.user && <p>{blog.user.name}</p>}
+        {blog.user && user.username === blog.user.username && (
+          <button id='delete' onClick={handleDelete}>
+            remove
+          </button>
+        )}
       </div>
     </div>
   )
