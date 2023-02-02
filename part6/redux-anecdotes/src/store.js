@@ -8,7 +8,7 @@ import { combineReducers } from 'redux'
 const reducer = combineReducers({
     anecdotes: anecdoteReducer,
     notification: notificationReducer,
-    filterWord: filterReducer
+    keyword: filterReducer
 })
 
 const store = createStore(
