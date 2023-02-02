@@ -30,9 +30,6 @@ const AnecdoteList = () => {
     const anecdotes = useSelector(({ keyword, anecdotes })=> {
         if (keyword == null) return anecdotes
         return anecdotes.filter(anecdote => {
-            // console.log(anecdote)
-            // console.log(keyword)
-            
             return anecdote.data.toLowerCase().includes(keyword.toLowerCase())
         })
     })
