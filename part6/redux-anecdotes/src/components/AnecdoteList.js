@@ -9,8 +9,7 @@ const Anecdote = ({anecdote}) => {
     
     const vote = (anecdote) => {
         dispatch(voteAnecdote(anecdote.id))
-        dispatch(createNotification(`you voted '${anecdote.data}'`))
-        setTimeout(() => dispatch(createNotification('')),5000)
+        dispatch(createNotification(`you voted '${anecdote.data}'`, 5000))
     }
 
     return (
