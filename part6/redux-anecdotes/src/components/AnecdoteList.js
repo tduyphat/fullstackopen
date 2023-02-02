@@ -1,30 +1,42 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { createNotification } from '../reducers/notificationReducer'
 
 const Anecdote = ({anecdote}) => {
+    
     const dispatch = useDispatch()
-    const vote = (id) => {
-        dispatch(voteAnecdote(id))
+    
+    const vote = (anecdote) => {
+        dispatch(voteAnecdote(anecdote.id))
+        dispatch(createNotification(`you voted '${anecdote.data}'`))
+        setTimeout(() => dispatch(createNotification('')),5000)
     }
+
     return (
         <div>
           <div>
-            {anecdote.content}
+            {anecdote.data || ''}
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
     )
 }
 
 const AnecdoteList = () => {
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(({ keyword, anecdotes })=> {
+        return anecdotes.filter(anecdote => {
+            if(keyword === null) return anecdotes
+            return anecdote.data.toLowerCase().includes(keyword.toLowerCase())
+        })
+    })
+
     return (
         <>
-        {anecdotes.sort((mine, yours) => yours.votes - mine.votes) 
+        {anecdotes.sort((a, b) => b.votes - a.votes) 
         .map(anecdote =>
             <Anecdote anecdote={anecdote} key={anecdote.id}/>
             )}
