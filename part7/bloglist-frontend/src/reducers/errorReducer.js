@@ -1,6 +1,6 @@
 const initialState = null
 let timer = null
-const successReducer = (state = initialState, action) => {
+const errorReducer = (state = initialState, action) => {
   switch(action.type) {
   case 'CREATED':
     return action.data
@@ -9,7 +9,7 @@ const successReducer = (state = initialState, action) => {
   }
 }
 
-export const successNotification = (notification, time = 0) => {
+export const errorNotification = (notification, time = 0) => {
   return async dispatch => {
     clearTimeout(timer)
     dispatch({
@@ -25,4 +25,4 @@ export const successNotification = (notification, time = 0) => {
   }
 }
 
-export default successReducer
+export default errorReducer

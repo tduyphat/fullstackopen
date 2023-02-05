@@ -1,19 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 
 import { SuccessNotification, ErrorNotification } from './components/Notification'
+import { successNotification } from './reducers/successReducer'
+import { errorNotification } from './reducers/errorReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -64,10 +67,7 @@ const App = () => {
       setPassword('')
 
     } catch (exception) {
-      setErrorMessage('wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(errorNotification('wrong username or password', 5000))
     }
   }
 
@@ -82,8 +82,7 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setSuccessMessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} has been added`)
-        setTimeout(() => { setSuccessMessage(null) }, 5000)
+        dispatch(successNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} has been added`, 5000))
       })
   }
 
@@ -106,8 +105,8 @@ const App = () => {
 
   return (
     <div>
-      <ErrorNotification message={errorMessage} />
-      <SuccessNotification message={successMessage} />
+      <ErrorNotification />
+      <SuccessNotification />
       <h2>blogs</h2>
       {user === null ?
         <LoginForm
