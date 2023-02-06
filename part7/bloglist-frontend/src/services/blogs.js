@@ -21,11 +21,15 @@ const create = async newObject => {
   return response.data
 }
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject, {
-    headers: { Authorization: token }
-  })
-  return request.then(response => response.data)
+const getSingle = async object => {
+  const response = await axios.get(`${baseUrl}/${object.id}`)
+  return response.data
+}
+
+const like = async object => {
+  const updated = { ...object, likes: object.likes+1 }
+  const response = await axios.put(`${baseUrl}/${object.id}`, updated)
+  return response.data
 }
 
 const remove = async (id) => {
@@ -35,4 +39,4 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, create, update, setToken, remove }
+export default { getAll, create, setToken, remove, getSingle, like }
