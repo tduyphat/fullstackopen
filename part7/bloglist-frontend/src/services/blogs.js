@@ -12,6 +12,11 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const getSingle = async object => {
+  const response = await axios.get(`${baseUrl}/${object.id}`)
+  return response.data
+}
+
 const create = async newObject => {
   const config = {
     headers: { Authorization: token },
@@ -21,14 +26,16 @@ const create = async newObject => {
   return response.data
 }
 
-const getSingle = async object => {
-  const response = await axios.get(`${baseUrl}/${object.id}`)
-  return response.data
-}
-
 const like = async object => {
   const updated = { ...object, likes: object.likes+1 }
   const response = await axios.put(`${baseUrl}/${object.id}`, updated)
+  return response.data
+}
+
+const update = async (newObject) => {
+  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject, {
+    headers: { Authorization: token },
+  })
   return response.data
 }
 
@@ -39,4 +46,4 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, create, setToken, remove, getSingle, like }
+export default { getAll, getSingle, create, setToken, remove, like, update }

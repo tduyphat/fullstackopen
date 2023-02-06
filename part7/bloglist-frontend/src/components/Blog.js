@@ -34,10 +34,17 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
     setLikes(likes + 1)
   }
 
-  const handleDelete = () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
-      remove(blog.id)
-  }
+  // const handleLikes = () => {
+  //   updateLikes({
+  //     id: blog.id
+  //   })
+  //   setLikes(likes + 1)
+  // }
+
+  // const handleDelete = () => {
+  //   if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`))
+  //     remove(blog.id)
+  // }
   return (
     <div style={blogStyle} className='blog'>
       {blog.title} {blog.author}
@@ -48,13 +55,17 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
         <p>url: {blog.url}</p>
         <p>
           likes: {likes}
-          <button id='like' onClick={handleLikes}>
+          <button id='like' onClick={() => {
+            updateLikes(blog)
+            // setLikes( likes + 1)
+          }}>
+          {/* <button id='like' onClick={handleLikes}> */}
             like
           </button>
         </p>
         {blog.user && <p>{blog.user.name}</p>}
         {blog.user && user.username === blog.user.username && (
-          <button id='delete' onClick={handleDelete}>
+          <button id='delete' onClick={() => remove(blog)}>
             remove
           </button>
         )}
