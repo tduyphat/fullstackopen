@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Blog from './components/Blog'
+import { Route, Switch, Link } from 'react-router-dom'
+
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import { SuccessNotification, ErrorNotification } from './components/Notification'
 import Togglable from './components/Togglable'
+import Users from './components/Users'
+import SingleBlog from './components/SingleBlog'
 
 import { successNotification } from './reducers/successReducer'
 import { errorNotification } from './reducers/errorReducer'
 import { initBlogs, likeBlog, createBlog, removeBlog } from './reducers/blogReducer'
 import { initUser, logOut, setUser } from './reducers/userReducer'
 
-import blogService from './services/blogs'
+import userService from './services/users'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -22,8 +25,23 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    userService.getAll().then(response => {
+      setUsers(response)
+    })
+  }, [])
 
   const blogFormRef = useRef()
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
 
   useEffect(() => {
     dispatch(initBlogs())
@@ -48,8 +66,9 @@ const App = () => {
       dispatch(setUser(username, password))
       setUsername('')
       setPassword('')
+    }
 
-    } catch (exception) {
+    catch (exception) {
       dispatch(errorNotification('wrong username or password', 5000))
     }
   }
@@ -69,53 +88,63 @@ const App = () => {
   }
 
   const handleDelete = async (blogObject) => {
-    const id = blogObject.id
-    const deletedBlog = await blogService.getSingle({ id })
-    dispatch(removeBlog(id))
-    dispatch(successNotification(`blog ${deletedBlog.title} by ${deletedBlog.author} has been deleted`, 5000))
+    dispatch(removeBlog(blogObject.id))
   }
 
   return (
-    <div>
+    <>
       <ErrorNotification />
       <SuccessNotification />
       <h2>blogs</h2>
-      {user === null ?
+      {user === null ? (
         <LoginForm
           handleLogin={handleLogin}
           handleUsernameChange={handleUsernameChange}
           handlePasswordChange={handlePasswordChange}
           username={username}
           password={password}
-        /> :
-        <div>
-          <p>{user.name} logged-in
-            <span>
-              <button id='logout-button' onClick={handleLogout}>
-                logout
-              </button>
-            </span>
-          </p>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm createBlog={handleCreateBlog} />
-          </Togglable>
-          <div className='blogs'>
-            {blogs
-              .sort((a, b) => a.likes - b.likes)
-              .map((blog) =>
-                <Blog
-                  key={blog.id}
-                  className='blog'
-                  blog={blog}
-                  user={user}
-                  updateLikes={handleLikes}
-                  remove={handleDelete}
-                />
-              )}
-          </div>
-        </div>
-      }
-    </div>
+        />
+      ) : (
+        <>
+          <p>{user.name} logged-in</p>
+          <button id="logout-button" onClick={handleLogout}>
+            logout
+          </button>
+          <Switch>
+            <Route path="/users/:id">
+              <Users users={users} />
+            </Route>
+            <Route path="/users">
+              <Users users={users} />
+            </Route>
+            <Route path="/blogs/:id">
+              <SingleBlog
+                blogs={blogs}
+                updateLikes={handleLikes}
+                deleteBlog={handleDelete}
+                user={user}
+              />
+            </Route>
+            <Route path="/">
+              <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                <BlogForm createBlog={handleCreateBlog} />
+              </Togglable>
+              <div className="blogs">
+                {blogs
+                  .sort((a, b) => a.likes - b.likes)
+                  .map((blog) => (
+                    <div key={blog.id} style={blogStyle}>
+                      <Link to={`/blogs/${blog.id}`}>
+                        {blog.title} by {blog.author}
+                      </Link>
+                    </div>
+                  ))}
+              </div>
+            </Route>
+          </Switch>
+        </>
+      )}
+    </>
   )
 }
 
