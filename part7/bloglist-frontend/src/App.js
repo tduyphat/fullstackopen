@@ -4,24 +4,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-
 import { SuccessNotification, ErrorNotification } from './components/Notification'
+import Togglable from './components/Togglable'
+
 import { successNotification } from './reducers/successReducer'
 import { errorNotification } from './reducers/errorReducer'
 import { initBlogs, likeBlog, createBlog, removeBlog } from './reducers/blogReducer'
+import { initUser, logOut, setUser } from './reducers/userReducer'
 
 import blogService from './services/blogs'
-import loginService from './services/login'
-import Togglable from './components/Togglable'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const blogFormRef = useRef()
 
@@ -30,13 +30,8 @@ const App = () => {
   }, [dispatch])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+    dispatch(initUser())
+  }, [dispatch])
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
@@ -50,15 +45,7 @@ const App = () => {
     event.preventDefault()
 
     try {
-      const user = await loginService.login({
-        username, password,
-      })
-      window.localStorage.setItem(
-        'loggedBlogAppUser', JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      console.log(user)
+      dispatch(setUser(username, password))
       setUsername('')
       setPassword('')
 
@@ -68,48 +55,24 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
-    setUser(null)
+    dispatch(logOut())
   }
 
   const handleCreateBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    // blogService
-    //   .create(blogObject)
-    //   .then(returnedBlog => {
-    //     setBlogs(blogs.concat(returnedBlog))
-    //     dispatch(successNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} has been added`, 5000))
-    //   })
     dispatch(createBlog(blogObject))
     dispatch(successNotification(`a new blog ${blogObject.title} by ${blogObject.author} has been added`, 5000))
   }
 
   const handleLikes = (blogObject) => {
-    // try {
-    //   blogService.update(id, blogObject)
-    // } catch (error) {
-    //   console.log(error)
-    // }
-    dispatch(likeBlog(blogObject))
-    // if (user !== null) {
-    //   dispatch(initBlogs())
-    // }
+    dispatch(likeBlog(blogObject.id))
   }
 
-  // const handleDelete = async (id) => {
-  //   try {
-  //     await blogService.remove(id)
-  //     setBlogs(blogs.filter((blog) => blog.id !== id))
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   const handleDelete = async (blogObject) => {
-    // const id = blogObject.id
-    // const blogtoDelete = await blogService.getSingle({ id })
-    dispatch(removeBlog(blogObject))
-    dispatch(successNotification(`blog ${blogObject.title} by ${blogObject.author} has been deleted`, 5000))
+    const id = blogObject.id
+    const deletedBlog = await blogService.getSingle({ id })
+    dispatch(removeBlog(id))
+    dispatch(successNotification(`blog ${deletedBlog.title} by ${deletedBlog.author} has been deleted`, 5000))
   }
 
   return (
