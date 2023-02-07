@@ -96,7 +96,6 @@ const App = () => {
     <>
       <ErrorNotification />
       <SuccessNotification />
-      {/* <h2>blogs</h2> */}
       {user === null ? (
         <LoginForm
           handleLogin={handleLogin}
@@ -107,10 +106,6 @@ const App = () => {
         />
       ) : (
         <>
-          {/* <p>{user.name} logged-in</p>
-          <button id="logout-button" onClick={handleLogout}>
-            logout
-          </button> */}
           <Navbar user={user} logOut={handleLogout}/>
           <h2>blog app</h2>
           <Switch>

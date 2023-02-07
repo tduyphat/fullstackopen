@@ -1,11 +1,12 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRkdXlwaGF0IiwiaWQiOiI2M2QxZmFiOGNlNmQzNzljNzkzYjkyMmQiLCJpYXQiOjE2NzQ5NDQ0OTQsImV4cCI6MTY3NDk0ODA5NH0.-54lwiON8gdN6TWtS8ZJ-C38kVyv9T6jYZk3KyBXz3s
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRkdXlwaGF0IiwiaWQiOiI2M2QxZmFiOGNlNmQzNzljNzkzYjkyMmQiLCJpYXQiOjE2NzU4MDcwMDcsImV4cCI6MTY3NTgxMDYwN30.GIjbJgzCVRYTkZCDvtECAnBFJKLkFYzOw80THMiqP8E
 
 {
 "title": "bcddd4444444444",
 "author": "neadil",
 "url": "www.wqf.com",
 "likes": "1245",
-"userId": "63d549b50c4ce248d463e54e"
+"userId": "63d549b50c4ce248d463e54e",
+"comments": "yo this is dope!"
 }

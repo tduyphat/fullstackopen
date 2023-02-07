@@ -44,7 +44,8 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
-    user: user._id
+    user: user._id,
+    comments: body.comments || []
   })
 
   const savedBlog = await blog.save()
@@ -73,6 +74,7 @@ blogsRouter.put('/:id', middleware.userExtractor, async (request, response, next
     author: body.author,
     url: body.url,
     likes: body.likes,
+    comments: body.comments || []
   }
 
   await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
