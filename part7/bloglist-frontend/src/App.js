@@ -9,6 +9,7 @@ import { SuccessNotification, ErrorNotification } from './components/Notificatio
 import Togglable from './components/Togglable'
 import Users from './components/Users'
 import SingleBlog from './components/SingleBlog'
+import Navbar from './components/Navbar'
 
 import { successNotification } from './reducers/successReducer'
 import { errorNotification } from './reducers/errorReducer'
@@ -95,7 +96,7 @@ const App = () => {
     <>
       <ErrorNotification />
       <SuccessNotification />
-      <h2>blogs</h2>
+      {/* <h2>blogs</h2> */}
       {user === null ? (
         <LoginForm
           handleLogin={handleLogin}
@@ -106,10 +107,12 @@ const App = () => {
         />
       ) : (
         <>
-          <p>{user.name} logged-in</p>
+          {/* <p>{user.name} logged-in</p>
           <button id="logout-button" onClick={handleLogout}>
             logout
-          </button>
+          </button> */}
+          <Navbar user={user} logOut={handleLogout}/>
+          <h2>blog app</h2>
           <Switch>
             <Route path="/users/:id">
               <Users users={users} />
