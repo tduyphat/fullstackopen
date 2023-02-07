@@ -8,12 +8,13 @@ import BlogForm from './components/BlogForm'
 import { SuccessNotification, ErrorNotification } from './components/Notification'
 import Togglable from './components/Togglable'
 import Users from './components/Users'
+import User from './components/User'
 import SingleBlog from './components/SingleBlog'
 import Navbar from './components/Navbar'
 
 import { successNotification } from './reducers/successReducer'
 import { errorNotification } from './reducers/errorReducer'
-import { initBlogs, likeBlog, createBlog, removeBlog } from './reducers/blogReducer'
+import { initBlogs, likeBlog, createBlog, removeBlog, commentBlog } from './reducers/blogReducer'
 import { initUser, logOut, setUser } from './reducers/userReducer'
 
 import userService from './services/users'
@@ -92,6 +93,10 @@ const App = () => {
     dispatch(removeBlog(blogObject.id))
   }
 
+  const handleComment = async (blogObject) => {
+    dispatch(commentBlog(blogObject))
+  }
+
   return (
     <>
       <ErrorNotification />
@@ -110,7 +115,7 @@ const App = () => {
           <h2>blog app</h2>
           <Switch>
             <Route path="/users/:id">
-              <Users users={users} />
+              <User users={users} />
             </Route>
             <Route path="/users">
               <Users users={users} />
@@ -121,6 +126,7 @@ const App = () => {
                 updateLikes={handleLikes}
                 deleteBlog={handleDelete}
                 user={user}
+                commenting={handleComment}
               />
             </Route>
             <Route path="/">

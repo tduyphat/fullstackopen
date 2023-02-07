@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import Blog from './Blog'
 
-const SingleBlog = ({ blogs, updateLikes, remove, user }) => {
+const SingleBlog = ({ blogs, updateLikes, remove, user, commenting }) => {
   const id = useParams().id
   const blog = blogs.find((b) => b.id === id)
   if (!blog) return null
@@ -11,6 +11,7 @@ const SingleBlog = ({ blogs, updateLikes, remove, user }) => {
       updateLikes={updateLikes}
       remove={remove}
       user={user}
+      commenting={commenting}
     />
   )
 }

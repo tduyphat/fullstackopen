@@ -47,4 +47,21 @@ const remove = async object => {
   }
 }
 
-export default { getAll, create, setToken, remove, likeBlog, getSingle }
+const comment = async (object) => {
+  const updated = {
+    ...object.blog,
+    comments: object.blogToComment.comments.concat([object.comment]),
+    author: object.author,
+    likes: object.likes
+  }
+  const response = await axios.put(
+    `${baseUrl}/${object.blogToComment.id}`,
+    updated,
+    {
+      headers: { Authorization: token },
+    }
+  )
+  return response.data
+}
+
+export default { getAll, create, setToken, remove, likeBlog, getSingle, comment }

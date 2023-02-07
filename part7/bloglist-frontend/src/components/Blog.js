@@ -1,4 +1,10 @@
-const Blog = ({ user, blog, updateLikes, remove }) => {
+import { useState } from 'react'
+import { useHistory } from 'react-router'
+
+const Blog = ({ user, blog, updateLikes, remove, commenting }) => {
+
+  const history = useHistory()
+  const [comment, setComment] = useState('')
 
   const handleLikes = () => {
     updateLikes({
@@ -12,6 +18,18 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
         id : blog.id,
         user: blog.user
       })
+    history.push('/')
+  }
+
+  const handleComment =  (event) => {
+    event.preventDefault()
+    commenting({
+      id: blog.id,
+      comment,
+      author: blog.author,
+      likes: blog.likes
+    })
+    setComment('')
   }
 
   return (
@@ -32,6 +50,14 @@ const Blog = ({ user, blog, updateLikes, remove }) => {
           remove
         </button>
       )}
+      <form onSubmit={handleComment}>
+        <input type='text' value={comment} onChange={({ target }) => setComment(target.value)}/>
+        <button type='submit'>add comment</button>
+      </form>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map(comment => <li key={comment}>{comment}</li>)}
+      </ul>
     </>
   )
 }

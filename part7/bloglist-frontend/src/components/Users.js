@@ -1,14 +1,6 @@
-// import { useState, useEffect } from 'react'
-// import userService from '../services/users'
 import { Link } from 'react-router-dom'
 
 const Users = ({ users }) => {
-//   const [users, setUsers] = useState([])
-//   useEffect(() => {
-//     userService.getAll().then((response) => {
-//       setUsers(response)
-//     })
-//   })
   return (
     <>
       <h2>Users</h2>

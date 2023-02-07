@@ -9,7 +9,7 @@ const errorReducer = (state = initialState, action) => {
   }
 }
 
-export const errorNotification = (notification, time = 0) => {
+export const errorNotification = (notification, time) => {
   return async dispatch => {
     clearTimeout(timer)
     dispatch({
