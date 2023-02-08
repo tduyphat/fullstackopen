@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Route, Switch, Link } from 'react-router-dom'
 
+import { Container, Table } from 'react-bootstrap'
+
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import { SuccessNotification, ErrorNotification } from './components/Notification'
@@ -10,7 +12,7 @@ import Togglable from './components/Togglable'
 import Users from './components/Users'
 import User from './components/User'
 import SingleBlog from './components/SingleBlog'
-import Navbar from './components/Navbar'
+import Navigator from './components/Navigator'
 
 import { successNotification } from './reducers/successReducer'
 import { errorNotification } from './reducers/errorReducer'
@@ -37,14 +39,6 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   useEffect(() => {
     dispatch(initBlogs())
   }, [dispatch])
@@ -61,7 +55,7 @@ const App = () => {
     setPassword(event.target.value)
   }
 
-  const handleLogin = async (event) => {
+  const handleLogin = (event) => {
     event.preventDefault()
 
     try {
@@ -98,7 +92,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <Container>
       <ErrorNotification />
       <SuccessNotification />
       {user === null ? (
@@ -111,7 +105,7 @@ const App = () => {
         />
       ) : (
         <>
-          <Navbar user={user} logOut={handleLogout}/>
+          <Navigator user={user} logOut={handleLogout} />
           <h2>blog app</h2>
           <Switch>
             <Route path="/users/:id">
@@ -133,22 +127,27 @@ const App = () => {
               <Togglable buttonLabel="new blog" ref={blogFormRef}>
                 <BlogForm createBlog={handleCreateBlog} />
               </Togglable>
-              <div className="blogs">
-                {blogs
-                  .sort((a, b) => a.likes - b.likes)
-                  .map((blog) => (
-                    <div key={blog.id} style={blogStyle}>
-                      <Link to={`/blogs/${blog.id}`}>
-                        {blog.title} by {blog.author}
-                      </Link>
-                    </div>
-                  ))}
-              </div>
+              <Table striped>
+                <tbody>
+                  {blogs
+                    .sort((a, b) => a.likes - b.likes)
+                    .map((blog) => (
+                      <tr key={blog.id}>
+                        <td>
+                          <Link to={`/blogs/${blog.id}`}>
+                            {blog.title} by {blog.author}
+                          </Link>
+                        </td>
+                        <td>{blog.user.name}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
             </Route>
           </Switch>
         </>
       )}
-    </>
+    </Container>
   )
 }
 

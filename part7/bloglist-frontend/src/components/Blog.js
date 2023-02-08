@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router'
+import { Button, Form } from 'react-bootstrap'
 
 const Blog = ({ user, blog, updateLikes, remove, commenting }) => {
 
@@ -40,23 +41,31 @@ const Blog = ({ user, blog, updateLikes, remove, commenting }) => {
       <p>{blog.url}</p>
       <p>
         {blog.likes} likes
-        <button id="like" onClick={handleLikes}>
+        <Button id="like" onClick={handleLikes}>
           like
-        </button>
+        </Button>
       </p>
       {blog.user && <p>added by {blog.user.name}</p>}
       {blog.user && user.username === blog.user.username && (
-        <button id="delete" onClick={handleDelete}>
+        <Button id="delete" onClick={handleDelete}>
           remove
-        </button>
+        </Button>
       )}
-      <form onSubmit={handleComment}>
-        <input type='text' value={comment} onChange={({ target }) => setComment(target.value)}/>
-        <button type='submit'>add comment</button>
-      </form>
+      <Form onSubmit={handleComment}>
+        <Form.Group>
+          <Form.Control
+            type="text"
+            value={comment}
+            onChange={({ target }) => setComment(target.value)}
+          />
+          <Button type="submit">add comment</Button>
+        </Form.Group>
+      </Form>
       <h3>comments</h3>
       <ul>
-        {blog.comments.map(comment => <li key={comment}>{comment}</li>)}
+        {blog.comments.map((comment) => (
+          <li key={comment}>{comment}</li>
+        ))}
       </ul>
     </>
   )

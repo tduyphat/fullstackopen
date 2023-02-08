@@ -1,4 +1,5 @@
 import React from 'react'
+import { Alert } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 
 export const SuccessNotification = () => {
@@ -8,8 +9,8 @@ export const SuccessNotification = () => {
   }
 
   return (
-    <div className="success">
-      {successMessage}
+    <div className="container">
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
     </div>
   )
 }
@@ -21,8 +22,8 @@ export const ErrorNotification = () => {
   }
 
   return (
-    <div className="error">
-      {errorMessage}
+    <div className="container">
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
     </div>
   )
 }
