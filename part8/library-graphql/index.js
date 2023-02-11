@@ -170,13 +170,18 @@ const resolvers = {
         id: uuid()
       }
       books = books.concat(book)
-      authors = authors.concat(author)
+      const check = authors.find(a => a.name === author.name)
+      if(!check) {
+        authors = authors.concat(author)
+      }
       return book 
     },
     
     editAuthor: (root, args) => {
       const authorToUpdate = authors.find(author => author.name === args.name)
-      if(!authorToUpdate) return null
+      if(!authorToUpdate) {
+        return null
+      }
       const newInfo = {...authorToUpdate, born: args.setBornTo}
       authors = authors.map(author => author.name === newInfo.name ? newInfo: author)
       return newInfo
