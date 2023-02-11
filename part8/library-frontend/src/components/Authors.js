@@ -1,31 +1,11 @@
 import React, { useState } from 'react'
 import Select from 'react-select'
-import { gql, useQuery, useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
+import { EDIT_AUTHOR, ALL_AUTHORS } from '../queries'
 
 const Authors = (props) => {
   const [name, setName] = useState('')
   const [year, setYear] = useState('')
-
-  const ALL_AUTHORS = gql`
-    query Query {
-      allAuthors {
-        name
-        born
-        bookCount
-        id
-      }
-    }  
-  `
-
-  const EDIT_AUTHOR = gql`
-  mutation editYear($nameValue: String!, $yearBorn: Int!) {
-    editAuthor(name: $nameValue, setBornTo: $yearBorn) {
-      name
-      born
-      bookCount
-    }
-  }
-  `
 
   const [editYear] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{query: ALL_AUTHORS}]
@@ -44,7 +24,6 @@ const Authors = (props) => {
     let yearBorn = Number(year)
     let nameValue = name.value
     editYear({ variables: {nameValue, yearBorn}})
-    setName('')
     setYear('')
   }
 

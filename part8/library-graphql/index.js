@@ -6,6 +6,9 @@ const Book = require("./models/Book")
 const User = require('./models/User')
 const jwt = require('jsonwebtoken')
 
+const { PubSub } = require("graphql-subscriptions")
+const pubsub = new PubSub()
+
 const MONGODB_URI = process.env.MONGODB_URI
 const JWT_SECRET = process.env.JWT_SECRET
 const PASSWORD = process.env.PASSWORD
@@ -72,6 +75,9 @@ const typeDefs = gql`
       password: String!
     ): Token
   }
+  type Subscription {
+    bookAdded: Books!
+  }
 `
 
 const resolvers = {
@@ -82,10 +88,10 @@ const resolvers = {
       if (args.author) {
         const needAuthor = await Author.find({ name: args.author })
         if (needAuthor) {
-          if (args.genres) {
+          if (args.genre) {
             return await Book.find({
               author: needAuthor,
-              genres: { $in: [args.genres] },
+              genres: { $in: [args.genre] },
             }).populate("author")
           }
           return await Book.find({
@@ -93,9 +99,9 @@ const resolvers = {
           }).populate("author")
         }
       }
-      if (args.genres) {
+      if (args.genre) {
         return await Book.find({
-          genres: { $in: [args.genres] },
+          genres: { $in: [args.genre] },
         }).populate("author")
       }
       return await Book.find({}).populate("author")
@@ -141,7 +147,8 @@ const resolvers = {
         if (args.title.length < 3) {
           throw new UserInputError("title too short!")
         }
-        return await book.save();
+        pubsub.publish("BOOK_ADDED", { bookAdded: book})
+        return book
       } catch (error) {
         throw new UserInputError("title already exists!")
       }
@@ -150,7 +157,8 @@ const resolvers = {
       const curUser = context.currentUser
       if (!curUser) throw new AuthenticationError("not authenticated")
       const author = await Author.findOne({ name: args.name })
-      author.phone = args.phone
+      console.log(author)
+      author.born = args.setBornTo
       return await author.save()
     },
     createUser: async (root, args) => {
@@ -181,6 +189,11 @@ const resolvers = {
       return { value: jwt.sign(userForToken, JWT_SECRET) }
     },
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
+    }
+  }
 }
 
 const server = new ApolloServer({
@@ -198,6 +211,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subcriptions ready at ${subscriptionUrl}`)
 })
