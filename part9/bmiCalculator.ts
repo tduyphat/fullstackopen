@@ -1,4 +1,18 @@
-const calculateBmi = (a: number, b: number) => {
+interface bmiValue {
+  height: number,
+  weight: number
+}
+export const parseArgumentsBmi = (height: number, weight: number): bmiValue => {
+  if(!isNaN(Number(height)) && !isNaN(Number(weight))) {
+      return {
+          height: height,
+          weight: weight
+      }
+  }
+  else throw new Error("Some arguments are not number!")
+}
+
+export const calculateBmi = (a: number, b: number) => {
   a = a / 100
   const result = b / (a * a)
 
@@ -21,5 +35,3 @@ const calculateBmi = (a: number, b: number) => {
       return "Obese (Class III)"
   }
 }
-
-console.log(calculateBmi(176, 75))

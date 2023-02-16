@@ -13,14 +13,15 @@ interface exerciseValues {
     exerciseHours: Array<number>
 }
 
-const parseArguments = (args: Array<string>): exerciseValues => {
-    if (args.length < 2) throw new Error('Not enough arguments');
-    const exerciseHours = args.slice(3, args.length).map(n => Number(n))
-    const target = Number(args[2])
-    return {target, exerciseHours}    
+export const parseArguments = (exerciseHoursParam: Array<number>, targetParam: number): exerciseValues => {
+    const exerciseHours =  exerciseHoursParam
+    const target = Number(targetParam)
+    const check = exerciseHours.map(n => isNaN(n))
+    if(check.includes(false) && !isNaN(target)) return {target, exerciseHours}
+    else throw new Error("Some of arguments are not number")    
 }
 
-const calculateExercises = ( target: number, exerciseHours: Array<number>): exerciseInfo => {
+export const calculateExercises = ( target: number, exerciseHours: Array<number>): exerciseInfo => {
     const periodLength = exerciseHours.length
     const trainingDays = exerciseHours.filter(n => n>0).length
     const average = (exerciseHours.reduce((a, b) => (a+b)))/periodLength
@@ -48,6 +49,3 @@ const calculateExercises = ( target: number, exerciseHours: Array<number>): exer
         average
     }
 }
-
-const {target, exerciseHours} = parseArguments(process.argv)
-console.log(calculateExercises(target, exerciseHours))
