@@ -48,15 +48,14 @@ const parseSSN = (ssn: unknown): string => {
     return ssn;
 };
 
-type Fields = {name: unknown, dateOfBirth: unknown, gender: unknown, occupation: unknown, ssn: unknown};
-
-const toNewPatientEntry = ({name, dateOfBirth, gender, occupation, ssn}: Fields): newPatientEntry => {
+const toNewPatientEntry = (object: any): newPatientEntry => {
     const newEntry: newPatientEntry = {
-        name: parseName(name),
-        dateOfBirth: parseDateOfBirth(dateOfBirth),
-        gender: parseGender(gender),
-        occupation: parseOccupation(occupation),
-        ssn: parseSSN(ssn)
+        name: parseName(object.name),
+        dateOfBirth: parseDateOfBirth(object.dateOfBirth),
+        gender: parseGender(object.gender),
+        occupation: parseOccupation(object.occupation),
+        ssn: parseSSN(object.ssn),
+        entries: []
     };
 
     return newEntry;
