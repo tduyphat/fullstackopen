@@ -1,41 +1,63 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
-import { Button, Divider, Container, Typography } from '@mui/material';
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { Button, Divider, Header, Container } from "semantic-ui-react";
 
+import SpecificPatient from './SpecificPatient';
 import { apiBaseUrl } from "./constants";
-import { Patient } from "./types";
+import { setDiagnosisList, setPatientList, useStateValue } from "./state";
+import { Diagnosis, Patient } from "./types";
 
-import patientService from "./services/patients";
-import PatientListPage from "./components/PatientListPage";
+import PatientListPage from "./PatientListPage";
 
 const App = () => {
-  const [patients, setPatients] = useState<Patient[]>([]);
-
-  useEffect(() => {
+  const [, dispatch] = useStateValue();
+  React.useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
     const fetchPatientList = async () => {
-      const patients = await patientService.getAll();
-      setPatients(patients);
+      try {
+        const { data: patientListFromApi } = await axios.get<Patient[]>(
+          `${apiBaseUrl}/patients`
+        );
+        dispatch(setPatientList(patientListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
     };
+
+    const fetchDiagnosisList = async () => {
+      try {
+        const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatch(setDiagnosisList(diagnosisListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    void fetchDiagnosisList();
     void fetchPatientList();
-  }, []);
-  
+  }, [dispatch]);
+
   return (
     <div className="App">
       <Router>
         <Container>
-          <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
-            Patientor
-          </Typography>
-          <Button component={Link} to="/" variant="contained" color="primary">
+          <Header as="h1">Patientor</Header>
+          <Button as={Link} to="/" primary>
             Home
           </Button>
           <Divider hidden />
-          <Routes>
-            <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
-          </Routes>
+          <Switch>
+            <Route path='/patients/:id'>
+              <SpecificPatient />
+            </Route>
+            <Route path="/">
+              <PatientListPage />
+            </Route>
+          </Switch>
         </Container>
       </Router>
     </div>

@@ -1,8 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { newPatientEntry, Gender } from "./types";
+import { newPatientEntry, Gender, DiagnoseEntry, HealthCheckRating, NewEntry, NonIdBaseEntry } from "./types";
 
 const isString = (text: unknown): text is string => {
     return typeof text === 'string' || text instanceof String;
+};
+
+const parseString = (str: unknown, type: string): string => {
+    if(!str || !isString(str)) {
+        throw new Error(`missing string for ${type}`);
+    }
+    return str; 
 };
 
 const parseName = (name: unknown): string => {
@@ -15,7 +23,7 @@ const parseName = (name: unknown): string => {
 const isDate = (date: string): boolean => {
     return Boolean(Date.parse(date));
   };
-
+  
 const parseDateOfBirth = (date: unknown): string => {
     if (!date || !isString(date) || !isDate(date)) {
         throw new Error('Incorrect or missing date: ' + date);
@@ -48,6 +56,27 @@ const parseSSN = (ssn: unknown): string => {
     return ssn;
 };
 
+const isDiagnosisCodes = (diagnosisCodes: Array<unknown>): diagnosisCodes is Array<DiagnoseEntry['code']> => {
+    return diagnosisCodes.every((code: unknown) => isString(code));
+};
+
+const parseDiagnosisCodes = (diagnosisCodes: Array<unknown>): Array<DiagnoseEntry['code']> => {
+    if(!isDiagnosisCodes(diagnosisCodes) || !diagnosisCodes)
+        throw new Error('Missing diagnosis codes');
+    return diagnosisCodes;
+};
+
+const isHealthCheckRating = (healthRate: any): healthRate is HealthCheckRating => {
+    return Object.values(HealthCheckRating).includes(healthRate);
+}; 
+
+const parseHealthCheckRating = (healthRate: unknown): HealthCheckRating => {
+    if(!healthRate || !isHealthCheckRating(healthRate)) {
+        throw new Error('Health check is missing');
+    }
+    return healthRate;
+};
+
 const toNewPatientEntry = (object: any): newPatientEntry => {
     const newEntry: newPatientEntry = {
         name: parseName(object.name),
@@ -61,4 +90,52 @@ const toNewPatientEntry = (object: any): newPatientEntry => {
     return newEntry;
 };
 
-export default toNewPatientEntry;
+const toPatientWithEntry = (object: any): NewEntry => {
+    const newBaseEntry: NonIdBaseEntry = {
+        description: parseString(object.description, 'description'),
+        date: parseDateOfBirth(object.date),
+        specialist: parseString(object.specialist, 'specialist')
+    };
+    if(object.diagnosisCodes) newBaseEntry.diagnosisCodes = parseDiagnosisCodes(object.diagnosisCodes);
+    if(!object.type || !isString(object.type)) {
+        throw new Error('Missing type value');
+    }
+    switch(object.type) {
+        case "OccupationalHealthcare":
+            const entry: NewEntry  = {
+                ...newBaseEntry,
+                type: "OccupationalHealthcare",
+                employerName: parseString(object.employerName, 'employer name')
+            };
+            if(object.sickLeave) {
+                if(object.sickLeave.startDate && object.sickLeave.endDate) {
+                    const sickLeave = {
+                        startDate: parseDateOfBirth(object.sickLeave.startDate),
+                        endDate: parseDateOfBirth(object.sickLeave.startDate)
+                    };
+                    entry.sickLeave = sickLeave;
+                }
+                else throw new Error('One of the date is missing');
+            }
+            return entry;
+        case "HealthCheck":
+            return {
+                ...newBaseEntry,
+                type: "HealthCheck",
+                healthCheckRating: parseHealthCheckRating(object.healthCheckRating)
+            };
+        case "Hospital":
+            return {
+                ...newBaseEntry,
+                type: "Hospital",
+                discharge : {
+                    date: parseDateOfBirth(object.discharge.date),
+                    criteria: parseString(object.discharge.criteria, 'discharge criteria')
+                }
+            };
+        default:
+            throw new Error('Wrong type');
+    }
+};
+
+export default {toNewPatientEntry, toPatientWithEntry};
