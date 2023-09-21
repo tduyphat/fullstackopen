@@ -17,7 +17,7 @@ import Navigator from './components/Navigator'
 import { successNotification } from './reducers/successReducer'
 import { errorNotification } from './reducers/errorReducer'
 import { initBlogs, likeBlog, createBlog, removeBlog, commentBlog } from './reducers/blogReducer'
-import { initUser, logOut, setUser } from './reducers/userReducer'
+import { initUser, logOut, newUser, setUser } from './reducers/userReducer'
 
 import userService from './services/users'
 
@@ -29,6 +29,9 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [newUsername, setNewUsername] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [users, setUsers] = useState([])
 
   useEffect(() => {
@@ -55,6 +58,18 @@ const App = () => {
     setPassword(event.target.value)
   }
 
+  const handleNewUsernameChange = (event) => {
+    setNewUsername(event.target.value)
+  }
+
+  const handleNewNameChange = (event) => {
+    setNewName(event.target.value)
+  }
+
+  const handleNewPasswordChange = (event) => {
+    setNewPassword(event.target.value)
+  }
+
   const handleLogin = (event) => {
     event.preventDefault()
 
@@ -66,6 +81,21 @@ const App = () => {
 
     catch (exception) {
       dispatch(errorNotification('wrong username or password', 5000))
+    }
+  }
+
+  const handleRegister = (event) => {
+    event.preventDefault()
+
+    try {
+      dispatch(newUser(newUsername, newName, newPassword))
+      setNewUsername('')
+      setNewName('')
+      setNewPassword('')
+    }
+
+    catch (exception) {
+      dispatch(errorNotification('already exists', 5000))
     }
   }
 
@@ -102,6 +132,13 @@ const App = () => {
           handlePasswordChange={handlePasswordChange}
           username={username}
           password={password}
+          handleRegister={handleRegister}
+          handleNewUsernameChange={handleNewUsernameChange}
+          handleNewNameChange={handleNewNameChange}
+          handleNewPasswordChange={handleNewPasswordChange}
+          newUsername={newUsername}
+          newName={newName}
+          newPassword={newPassword}
         />
       ) : (
         <>

@@ -7,6 +7,13 @@ const LoginForm = ({
   handlePasswordChange,
   username,
   password,
+  handleRegister,
+  newUsername,
+  handleNewUsernameChange,
+  newName,
+  handleNewNameChange,
+  newPassword,
+  handleNewPasswordChange,
 }) => {
 
   return (
@@ -36,6 +43,39 @@ const LoginForm = ({
           </Button>
         </Form.Group>
       </Form>
+
+      <h2>register</h2>
+      <Form onSubmit={handleRegister}>
+        <Form.Group>
+          <Form.Label>username:</Form.Label>
+          <Form.Control
+            id="newUsername"
+            type="text"
+            value={newUsername}
+            onChange={handleNewUsernameChange}
+          />
+
+          <Form.Label>name:</Form.Label>
+          <Form.Control
+            id="name"
+            type="text"
+            value={newName}
+            onChange={handleNewNameChange}
+          />
+
+          <Form.Label>password:</Form.Label>
+          <Form.Control
+            id="newPassword"
+            type="password"
+            value={newPassword}
+            onChange={handleNewPasswordChange}
+          />
+
+          <Button variant="primary" type="submit">
+            register
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }
@@ -45,7 +85,14 @@ LoginForm.propTypes = {
   handleUsernameChange: PropTypes.func.isRequired,
   handlePasswordChange: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired
+  password: PropTypes.string.isRequired,
+  handleRegister:PropTypes.func.isRequired,
+  handleNewUsernameChange:PropTypes.func.isRequired,
+  handleNewNameChange:PropTypes.func.isRequired,
+  handleNewPasswordChange:PropTypes.func.isRequired,
+  newUsername: PropTypes.string.isRequired,
+  newName: PropTypes.string.isRequired,
+  newPassword: PropTypes.string.isRequired,
 }
 
 export default LoginForm

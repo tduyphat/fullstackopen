@@ -1,11 +1,14 @@
 import blogService from '../services/blogs'
 import loginService from '../services/login'
+import registerService from '../services/register'
 
 const userReducer = (state = null, action) => {
   switch(action.type) {
   case 'INIT_USER':
     return action.data
   case 'SET_USER':
+    return action.data
+  case 'NEW_USER':
     return action.data
   case 'LOG_OUT':
     return null
@@ -40,6 +43,18 @@ export const setUser = (username, password) => {
     )
     dispatch({
       type: 'SET_USER',
+      data: user
+    })
+  }
+}
+
+export const newUser = (username, name, password) => {
+  return async dispatch => {
+    const user = await registerService.register({
+      username, name, password
+    })
+    dispatch({
+      type: 'NEW_USER',
       data: user
     })
   }
